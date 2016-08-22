@@ -27,11 +27,12 @@ public abstract class MixinMinecraft {
 			LoadingScreenAPI.setTopLevelElement(el);
 
 			LoadingScreen.textureManager = textureManager;
-			LoadingScreen.draw(textureManager);
+//			LoadingScreen.draw(textureManager);
+			LoadingScreen.start();
 
 			while (el.getProgress() < 1) {
 				el.incrementStage();
-				LoadingScreen.draw(textureManager);
+				LoadingScreen.update();
 				try {
 					Thread.sleep(50);
 				} catch (InterruptedException e) {
@@ -68,7 +69,7 @@ public abstract class MixinMinecraft {
 	@Inject(method = "a(Ljava/lang/String;)V", at = @At("RETURN"))
 	public void onA(String s, CallbackInfo ci) {
 		if ("Post startup".equals(s)) {
-//			LoadingScreen.stop();
+			LoadingScreen.stop();
 		}
 	}
 

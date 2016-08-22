@@ -2,31 +2,32 @@ package net.shadowfacts.loadingscreen;
 
 import net.fabricmc.base.loader.Init;
 import net.minecraft.client.GlHandler;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexBuffer;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.util.Identifier;
 import net.shadowfacts.loadingscreen.api.LoadingScreenAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.DisplayScale;
 import net.shadowfacts.loadingscreen.api.element.ILoadingScreenElement;
-import net.shadowfacts.loadingscreen.util.LSFontRenderer;
 import net.shadowfacts.loadingscreen.util.Texture;
-import net.shadowfacts.loadingscreen.util.Utils;
 import none.bpd;
-import none.bwr;
-import none.bxj;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.SharedDrawable;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class LoadingScreen {
 
 	public static boolean enabled;
 	public static TextureManager textureManager;
+
+	private static Thread renderingThread;
+	private static boolean running;
+	private static final Lock displayLock = new ReentrantLock(true);
+	private static final Semaphore displayMutex = new Semaphore(1);
+	private static SharedDrawable shared;
 
 	private static DisplayScale scale;
 	private static bpd bpd;
@@ -38,6 +39,50 @@ public class LoadingScreen {
 		LoadingScreenAPI.setInternalMethods(new InternalMethods());
 		InternalMethods.loadFromConfig(); // TODO: config stuff
 		enabled = true;
+	}
+
+	public static void start() {
+		try {
+			shared = new SharedDrawable(Display.getDrawable());
+			Display.getDrawable().releaseContext();
+			shared.makeCurrent();
+		} catch (LWJGLException e) {
+			throw new RuntimeException(e);
+		}
+
+
+		running = true;
+
+		renderingThread = new Thread(() -> {
+			while (running) {
+				draw(textureManager);
+
+				displayMutex.acquireUninterruptibly();
+				Display.update();
+				displayMutex.release();
+				Display.sync(60);
+
+				try {
+					Display.getDrawable().releaseContext();
+				} catch (LWJGLException e) {
+					throw new RuntimeException(e);
+				} finally {
+					displayLock.unlock();
+				}
+			}
+		});
+		renderingThread.start();
+	}
+
+	public static void stop() {
+		running = false;
+	}
+
+	public static void update() {
+		if (displayMutex.tryAcquire()) {
+			Display.processMessages();
+			displayMutex.release();
+		}
 	}
 
 	public static void draw(TextureManager textureManager) {
@@ -95,6 +140,13 @@ public class LoadingScreen {
 	}
 
 	private static void setupGLState() {
+		displayLock.lock();
+		try {
+			Display.getDrawable().makeCurrent();
+		} catch (LWJGLException e) {
+			throw new RuntimeException(e);
+		}
+
 		scale = new DisplayScale(Minecraft.getInstance());
 		int v2 = scale.e();
 		bpd = new bpd(scale.getScaledWidth() * v2, scale.getScaledHeight() * v2, true);
@@ -118,7 +170,6 @@ public class LoadingScreen {
 		bpd.c(scale.getScaledWidth() * scale.e(), scale.getScaledHeight() * scale.e());
 		GlHandler.e();
 		GlHandler.alphaFunc(516, 0.1f);
-		Display.update();
 	}
 
 }
