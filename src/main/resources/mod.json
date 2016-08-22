@@ -1,0 +1,10 @@
+{
+	"group": "net.shadowfacts",
+	"id": "loading-screen",
+	"version": "0.1.0",
+	"side": "client",
+	"mixins": {
+		"client": "loadingscreen.mixins.json"
+	},
+	"modClass": "net.shadowfacts.loadingscreen.LoadingScreen"
+}
