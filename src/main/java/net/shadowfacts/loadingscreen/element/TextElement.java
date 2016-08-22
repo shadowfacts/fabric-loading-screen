@@ -65,12 +65,8 @@ public class TextElement implements ILoadingScreenElement {
 			LSFontRenderer.drawString(text, x, textY, getTextColor());
 		}
 
-		int width = LoadingScreenAPI.getLoadingScreenWidth();
-		int x = (scale.getScaledWidth() - width) / 2;
-		Utils.drawOutline(x - 1, y - 1, width + 2, getHeight() + 2);
-
 		if (hasChild()) {
-			child.draw(textureManager, y + getHeight() + 5);
+			child.draw(textureManager, y - getHeight() - 5);
 		}
 	}
 
