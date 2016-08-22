@@ -20,10 +20,6 @@ public class LoadingScreen {
 	public static boolean enabled;
 	public static TextureManager textureManager;
 
-//	private static Thread thread;
-//	private static boolean running;
-//	private static Lock lock = new ReentrantLock(true);
-
 	private static DisplayScale scale;
 	private static bpd bpd;
 
@@ -34,64 +30,16 @@ public class LoadingScreen {
 		enabled = true;
 	}
 
-//	public static void start() {
-//		running = true;
-//
-////		try {
-////			Display.getDrawable().releaseContext();
-////		} catch (LWJGLException e) {
-////			throw new RuntimeException(e);
-////		}
-//
-//		SharedDrawable shared;
-//
-//		try {
-//			shared = new SharedDrawable(Display.getDrawable());
-//			Display.getDrawable().releaseContext();
-//			shared.makeCurrent();
-////			shared.makeCurrent();
-//		} catch (LWJGLException e) {
-//			throw new RuntimeException(e);
-//		}
-//
-//		thread = new Thread(() -> {
-////			try {
-////				shared.makeCurrent();
-////			} catch (LWJGLException e) {
-////				throw new RuntimeException(e);
-////			}
-//
-//			setupGLState();
-//
-//			while (running) {
-//				draw(textureManager);
-//			}
-//
-//			tearDownGLState();
-//		});
-//
-//		thread.start();
-//	}
-
-//	public static void stop() {
-//		running = false;
-//
-////		try {
-////			Display.getDrawable().makeCurrent();
-////		} catch (LWJGLException e) {
-////			throw new RuntimeException(e);
-////		}
-//	}
-
 	public static void draw(TextureManager textureManager) {
 		setupGLState();
 
-//		ILoadingScreenElement el = LoadingScreenAPI.getTopLevelElement();
-//		if (el != null) {
-//			el.draw(textureManager, new DisplayScale(Minecraft.getInstance()).getScaledHeight() / 2);
-//		}
+		ILoadingScreenElement el = LoadingScreenAPI.getTopLevelElement();
+		if (el != null) {
+			el.draw(textureManager, new DisplayScale(Minecraft.getInstance()).getScaledHeight() / 2);
+		}
 //		Utils.drawRect(0, 0, 100, 100, Color.RED);
-		LSFontRenderer.drawString("Hello, World!", 0, 0, Color.BLACK);
+//		LSFontRenderer.drawString("Hello, World!", 0, 0, Color.BLACK);
+
 
 		Minecraft.getInstance().a("Loading Screen");
 
@@ -99,13 +47,6 @@ public class LoadingScreen {
 	}
 
 	private static void setupGLState() {
-//		lock.lock();
-//		try {
-//			Display.getDrawable().makeCurrent();
-//		} catch (LWJGLException e) {
-//			throw new RuntimeException(e);
-//		}
-
 		scale = new DisplayScale(Minecraft.getInstance());
 		int v2 = scale.e();
 		bpd = new bpd(scale.getScaledWidth() * v2, scale.getScaledHeight() * v2, true);
@@ -130,14 +71,6 @@ public class LoadingScreen {
 		GlHandler.e();
 		GlHandler.alphaFunc(516, 0.1f);
 		Display.update();
-
-//		try {
-//			Display.getDrawable().releaseContext();
-//		} catch (LWJGLException e) {
-//			throw new RuntimeException(e);
-//		} finally {
-//			lock.unlock();
-//		}
 	}
 
 }

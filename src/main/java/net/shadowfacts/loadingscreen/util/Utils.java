@@ -40,7 +40,6 @@ public class Utils {
 //
 //		tessellator.b();
 
-		GL11.glPushMatrix();
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glColor3f(color.getRed(), color.getGreen(), color.getBlue());
 		GL11.glVertex2f(x, y);
@@ -48,7 +47,6 @@ public class Utils {
 		GL11.glVertex2f(x + width, y + height);
 		GL11.glVertex2f(x + width, y);
 		GL11.glEnd();
-		GL11.glPopMatrix();
 
 //		float zLevel = 0;
 //		Tessellator tessellator = Tessellator.getInstance();
@@ -75,5 +73,10 @@ public class Utils {
 //			}
 //		}
 //		throw new RuntimeException("Couldn't find resource pack to handle " + id);
+	}
+
+	public static void drawOutline(int x, int y, int width, int height) {
+		drawRect(x, y, width, height, Color.BLACK);
+		drawRect(x + 1, y + 1, width - 2, height - 2, Color.WHITE);
 	}
 }

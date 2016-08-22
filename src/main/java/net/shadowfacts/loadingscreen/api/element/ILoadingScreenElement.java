@@ -24,6 +24,8 @@ public interface ILoadingScreenElement {
 
 	void setChild(ILoadingScreenElement element);
 
+	int getHeight();
+
 	void draw(TextureManager textureManager, int y);
 
 }

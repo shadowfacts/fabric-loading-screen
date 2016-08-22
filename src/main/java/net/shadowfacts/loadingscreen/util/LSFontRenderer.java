@@ -17,7 +17,9 @@ public class LSFontRenderer {
 	private static final Identifier fontTexId = new Identifier("textures/font/ascii.png");
 	private static final Texture fontTex = new Texture(fontTexId);
 
-	public static final int[] widths = new int[256];
+	private static final int[] widths = new int[256];
+
+	public static final int FONT_HEIGHT = 9;
 
 	static {
 		try (InputStream in = Utils.openStream(fontTexId)) {
@@ -86,8 +88,30 @@ public class LSFontRenderer {
 		int x = startX;
 
 		GL11.glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+//		GL11.glEnable(GL11.GL_TEXTURE_2D);
+//		GL11.glDisable(GL11.GL_LIGHTING);
+//		GL11.glDisable(GL11.GL_DEPTH_TEST);
+//		GL11.glEnable(GL11.GL_BLEND);
+//		GlHandler.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		fontTex.bind();
+
+//		GL11.glBegin(GL11.GL_QUADS);
+//
+//		GL11.glTexCoord2f(0, 0);
+//		GL11.glVertex2f(0, 0);
+//
+//		GL11.glTexCoord2f(0, 1);
+//		GL11.glVertex2f(0, 256);
+//
+//		GL11.glTexCoord2f(1, 1);
+//		GL11.glVertex2f(256, 256);
+//
+//		GL11.glTexCoord2f(1, 0);
+//		GL11.glVertex2f(256, 0);
+//
+//		GL11.glEnd();
+//
+//		if (true) return x;
 
 		for (char c : s.toCharArray()) {
 			int index = CHARACTERS.indexOf(c);
@@ -119,7 +143,11 @@ public class LSFontRenderer {
 	}
 
 	private static int getCharWidth(char c) {
-		return widths[CHARACTERS.indexOf(c)];
+		if (c == 32) {
+			return 4;
+		} else {
+			return widths[CHARACTERS.indexOf(c)];
+		}
 	}
 
 }

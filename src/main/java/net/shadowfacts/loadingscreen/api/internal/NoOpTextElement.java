@@ -41,6 +41,11 @@ public class NoOpTextElement implements ILoadingScreenElement {
 	}
 
 	@Override
+	public int getHeight() {
+		return 10;
+	}
+
+	@Override
 	public void draw(TextureManager textureManager, int y) {
 
 	}

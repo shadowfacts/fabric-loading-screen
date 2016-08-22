@@ -5,10 +5,8 @@ import net.minecraft.client.util.DisplayScale;
 import net.shadowfacts.loadingscreen.api.LoadingScreenAPI;
 import net.shadowfacts.loadingscreen.api.element.ILoadingScreenElement;
 import net.shadowfacts.loadingscreen.util.LSFontRenderer;
-import net.shadowfacts.loadingscreen.util.LSMinecraftFontRenderer;
 import net.shadowfacts.loadingscreen.util.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.FontRenderer;
 
 import javax.annotation.Nullable;
 import java.awt.Color;
@@ -51,16 +49,28 @@ public class TextElement implements ILoadingScreenElement {
 	}
 
 	@Override
+	public int getHeight() {
+		return 11;
+	}
+
+	@Override
 	public void draw(TextureManager textureManager, int y) {
+		Minecraft mc = Minecraft.getInstance();
+		DisplayScale scale = new DisplayScale(mc);
+
+		String text = getText();
 		if (text != null && !text.isEmpty()) {
-			Minecraft mc = Minecraft.getInstance();
-			DisplayScale scale = new DisplayScale(mc);
 			int x = (scale.getScaledWidth() - LSFontRenderer.getStringWidth(text)) / 2;
-			LSFontRenderer.drawString(text, x, y, color);
+			int textY = y + (getHeight() - LSFontRenderer.FONT_HEIGHT) / 2;
+			LSFontRenderer.drawString(text, x, textY, getTextColor());
 		}
 
+		int width = LoadingScreenAPI.getLoadingScreenWidth();
+		int x = (scale.getScaledWidth() - width) / 2;
+		Utils.drawOutline(x - 1, y - 1, width + 2, getHeight() + 2);
+
 		if (hasChild()) {
-			child.draw(textureManager, y + 20);
+			child.draw(textureManager, y + getHeight() + 5);
 		}
 	}
 

@@ -21,13 +21,37 @@ public abstract class MixinMinecraft {
 	@Overwrite
 	public void a(TextureManager textureManager) {
 		if (LoadingScreen.enabled) {
-			ILoadingScreenElement el = LoadingScreenAPI.getElementFactory().createTextElement();
-			el.setText("Initializing Minecraft");
-//			el.setProgress(0.5f);
+			IProgressBarElement el = LoadingScreenAPI.getElementFactory().createProgressElement();
+			el.setStages(3);
+			el.setText("Loading mods");
 			LoadingScreenAPI.setTopLevelElement(el);
 
 			LoadingScreen.textureManager = textureManager;
 			LoadingScreen.draw(textureManager);
+
+			for (int i = 0; i < 3; i++) {
+				IProgressBarElement child = LoadingScreenAPI.getElementFactory().createProgressElement();
+				child.setText("Mod " + i);
+				child.setProgress(0);
+				el.setChild(child);
+				while (child.getProgress() < 1) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					child.setProgress(child.getProgress() + 0.25f);
+					LoadingScreen.draw(textureManager);
+				}
+				el.incrementStage();
+				el.setChild(null);
+				LoadingScreen.draw(textureManager);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
