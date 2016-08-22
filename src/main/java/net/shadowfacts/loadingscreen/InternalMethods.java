@@ -55,7 +55,7 @@ public class InternalMethods implements IInternalMethods {
 
 	@Override
 	public int getLoadingScreenWidth() {
-		return (int)(new DisplayScale(Minecraft.getInstance()).getScaledWidth() * 2/3f);
+		return new DisplayScale(Minecraft.getInstance()).getScaledWidth();
 	}
 
 }

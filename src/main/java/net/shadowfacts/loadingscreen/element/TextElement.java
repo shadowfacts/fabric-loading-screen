@@ -66,7 +66,7 @@ public class TextElement implements ILoadingScreenElement {
 		}
 
 		if (hasChild()) {
-			child.draw(textureManager, y - getHeight() - 5);
+			child.draw(textureManager, y - getHeight() - 3);
 		}
 	}
 
