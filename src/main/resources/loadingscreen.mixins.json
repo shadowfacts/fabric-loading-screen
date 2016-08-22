@@ -3,8 +3,7 @@
 	"package": "net.shadowfacts.loadingscreen.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
-		"MixinMinecraft",
-		"MixinFontRenderer"
+		"MixinMinecraft"
 	],
 	"injectors": {
 		"defaultRequire": 1
