@@ -90,7 +90,7 @@ public class LoadingScreen {
 //		if (el != null) {
 //			el.draw(textureManager, new DisplayScale(Minecraft.getInstance()).getScaledHeight() / 2);
 //		}
-		Utils.drawRect(0, 0, 100, 100, Color.RED);
+//		Utils.drawRect(0, 0, 100, 100, Color.RED);
 		LSFontRenderer.drawString("Hello, World!", 0, 0, Color.BLACK);
 
 		Minecraft.getInstance().a("Loading Screen");

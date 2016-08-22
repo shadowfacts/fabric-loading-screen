@@ -86,6 +86,7 @@ public class LSFontRenderer {
 		int x = startX;
 
 		GL11.glColor4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		fontTex.bind();
 
 		for (char c : s.toCharArray()) {
