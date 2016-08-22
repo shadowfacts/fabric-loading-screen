@@ -23,37 +23,37 @@ public class LSFontRenderer {
 		try (InputStream in = Utils.openStream(fontTexId)) {
 			BufferedImage image = ImageIO.read(in);
 
-			int lvt_3_1_ = image.getWidth();
-			int lvt_4_1_ = image.getHeight();
-			int[] lvt_5_1_ = new int[lvt_3_1_ * lvt_4_1_];
-			image.getRGB(0, 0, lvt_3_1_, lvt_4_1_, lvt_5_1_, 0, lvt_3_1_);
-			int lvt_6_1_ = lvt_4_1_ / 16;
-			int lvt_7_1_ = lvt_3_1_ / 16;
+			int width = image.getWidth();
+			int height = image.getHeight();
+			int[] colors = new int[width * height];
+			image.getRGB(0, 0, width, height, colors, 0, width);
+			int wid = height / 16;
+			int lvt_7_1_ = width / 16;
 			boolean lvt_8_1_ = true;
 			float lvt_9_1_ = 8.0F / (float)lvt_7_1_;
 
-			for (int lvt_10_1_ = 0; lvt_10_1_ < 256; ++lvt_10_1_)
+			for (int charIndex = 0; charIndex < 256; ++charIndex)
 			{
-				int j1 = lvt_10_1_ % 16;
-				int k1 = lvt_10_1_ / 16;
+				int charX = charIndex % 16;
+				int charY = charIndex / 16;
 
-				if (lvt_10_1_ == 32)
+				if (charIndex == 32)
 				{
-					widths[lvt_10_1_] = 4;
+					widths[charIndex] = 4;
 				}
 
 				int l1;
 
 				for (l1 = lvt_7_1_ - 1; l1 >= 0; --l1)
 				{
-					int i2 = j1 * lvt_7_1_ + l1;
+					int i2 = charX * lvt_7_1_ + l1;
 					boolean flag1 = true;
 
-					for (int j2 = 0; j2 < lvt_6_1_ && flag1; ++j2)
+					for (int j2 = 0; j2 < wid && flag1; ++j2)
 					{
-						int k2 = (k1 * lvt_7_1_ + j2) * lvt_3_1_;
+						int k2 = (charY * lvt_7_1_ + j2) * width;
 
-						if ((lvt_5_1_[i2 + k2] >> 24 & 255) != 0)
+						if ((colors[i2 + k2] >> 24 & 255) != 0)
 						{
 							flag1 = false;
 						}
@@ -66,7 +66,7 @@ public class LSFontRenderer {
 				}
 
 				++l1;
-				widths[lvt_10_1_] = (int)(0.5D + (double)((float)l1 * lvt_9_1_)) + 1;
+				widths[charIndex] = (int)(0.5D + (double)((float)l1 * lvt_9_1_)) + 1;
 			}
 
 		} catch (IOException e) {
@@ -77,7 +77,7 @@ public class LSFontRenderer {
 	public static int getStringWidth(String s) {
 		int width = 0;
 		for (char c : s.toCharArray()) {
-			width += getCharWidth(c, CHARACTERS.indexOf(c));
+			width += getCharWidth(c);
 		}
 		return width;
 	}
@@ -93,7 +93,7 @@ public class LSFontRenderer {
 			int charX = index % 16 * 8;
 			int charY = index / 16 * 8;
 
-			int charWidth = getCharWidth(c, index);
+			int charWidth = getCharWidth(c);
 
 			float f = (float)charWidth - 0.01F;
 			GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
@@ -117,12 +117,8 @@ public class LSFontRenderer {
 		return x;
 	}
 
-	private static int getCharWidth(char c, int index) {
-		if (c == 32) {
-			return 4;
-		} else {
-			return widths[index];
-		}
+	private static int getCharWidth(char c) {
+		return widths[CHARACTERS.indexOf(c)];
 	}
 
 }
